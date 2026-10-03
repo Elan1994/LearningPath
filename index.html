@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101a28" />
+  <title>DataCraft | Data Engineering Learning Lab</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="DataCraft home"><span class="brand-mark">D</span><span>Data<span class="brand-light">Craft</span></span><span class="lab-tag">LEARNING LAB</span></a>
+    <div class="top-actions"><span class="safe-label"><span class="safe-dot"></span> Synthetic data · Offline demo</span><button class="icon-button" id="helpButton" aria-label="Help">?</button><div class="avatar">JS</div></div>
+  </header>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="workspace-select"><span class="workspace-icon">◈</span><span><b>Learning workspace</b><small>Beginner track</small></span><span class="chevron">⌄</span></div>
+      <div class="nav-label">LEARN</div>
+      <button class="nav-item active"><span>▦</span> Mission workspace <span class="nav-count">01</span></button>
+      <button class="nav-item" data-toast="Mission library is coming soon."><span>◫</span> Mission library</button>
+      <button class="nav-item" data-toast="Your progress is saved in this browser session."><span>◷</span> My progress</button>
+      <div class="nav-label path-label">YOUR LEARNING PATH <span>5 STEPS</span></div>
+      <div class="path-list">
+        <div class="path-item done"><span class="path-bullet">✓</span><span>Explore the data</span></div>
+        <div class="path-item current"><span class="path-bullet">2</span><span>Transform with SQL</span></div>
+        <div class="path-item"><span class="path-bullet">3</span><span>Use a notebook</span></div>
+        <div class="path-item"><span class="path-bullet">4</span><span>Build an ADF pipeline</span></div>
+        <div class="path-item"><span class="path-bullet">5</span><span>Export your file</span></div>
+      </div>
+      <div class="sidebar-bottom"><div class="progress-copy"><span>MISSION PROGRESS</span><b id="progressPercent">20%</b></div><div class="progress-track"><span id="progressBar"></span></div><div class="sandbox-note"><span>✦</span><p><b>Safe sandbox</b><br />Everything here is fictional and runs in your browser.</p></div></div>
+    </aside>
+    <main class="main-content">
+      <div class="breadcrumbs"><span>Learning path</span><i>/</i><span>Data engineering basics</span><i>/</i><b>Mission 01</b></div>
+      <div class="mission-heading"><div><div class="eyebrow"><span class="eyebrow-dot"></span> HANDS-ON MISSION <span class="difficulty">BEGINNER · 20 MIN</span></div><h1>Build a data pipeline</h1><p>Combine tables, transform records in a notebook, and publish an output file.</p></div><button class="outline-button" id="resetButton">↺ <span>Reset mission</span></button></div>
+      <section class="mission-banner"><div class="banner-icon">✧</div><div><b>Your challenge</b><p>Combine three tables, apply a transformation, and use a pipeline to create an output file.</p></div><button class="text-button" id="dismissChallenge" aria-label="Dismiss challenge">×</button></section>
+      <div class="tabs" role="tablist"><button class="tab active" data-tab="notebook" role="tab">▤ <span>Notebook</span></button><button class="tab" data-tab="pipeline" role="tab">⤳ <span>ADF pipeline</span></button><button class="tab" data-tab="output" role="tab">▧ <span>Output files</span><span class="tab-badge" id="fileBadge">0</span></button></div>
+      <section class="tab-panel active" id="notebookPanel">
+        <div class="workbench-head"><div><h2>Notebook <span class="kernel-pill"><span></span> Ready</span></h2><p>Explore the tables, then write a transformation.</p></div><button class="primary-button" id="runNotebook"><span>▶</span> Run all</button></div>
+        <div class="notebook-layout">
+          <div class="notebook-column">
+            <div class="cell markdown-cell"><div class="cell-gutter"><span>¶</span></div><div class="cell-body"><h3>Task guide</h3><p>1. Join the source tables using their shared keys.<br />2. Calculate a derived value.<br />3. Group the results by a selected attribute.</p><div class="hint-inline">✦ <span>Tip: start with <code>source_a</code> and identify the shared keys in each table.</span></div></div></div>
+            <div class="cell code-cell"><div class="cell-gutter"><span>1</span><span class="run-indicator" id="cell1Indicator"></span></div><div class="cell-body"><div class="cell-toolbar"><div class="language-picker"><select id="languageSelect" aria-label="Notebook language"><option value="sql">SQL</option><option value="python">Python</option><option value="pyspark">PySpark</option></select><span class="dropdown-arrow">⌄</span></div><span class="cell-toolbar-right">Cell 1 <button class="mini-run" id="runCell" title="Run cell">▶</button></span></div><textarea id="codeEditor" spellcheck="false" aria-label="Notebook code"></textarea><div class="cell-output" id="cellOutput"><div class="output-empty">Run this cell to preview your transformed data.</div></div></div></div>
+            <button class="add-cell" id="addCell">＋ Add cell</button>
+          </div>
+          <aside class="data-panel"><div class="panel-title"><div><h3>Tables</h3><p><span id="tableCount">3</span> sources &amp; working tables</p></div><button class="add-table-button" id="addTableButton">＋ Add table</button></div><div class="table-list" id="tableList"></div><div class="schema-tip"><span>ⓘ</span><p>Preview a table or use its menu to edit or delete it. Add source or temporary tables as needed.</p></div><button class="assistant-card" id="askAssistant"><span class="assistant-spark">✦</span><span><b>Need a hand?</b><small>Ask the learning assistant</small></span><span class="card-arrow">›</span></button></aside>
+        </div>
+      </section>
+      <section class="tab-panel" id="pipelinePanel" hidden>
+        <div class="workbench-head"><div><h2>Data Factory pipeline <span class="draft-pill">DRAFT</span></h2><p>Connect activities to move data from sources to a target file.</p></div><button class="primary-button" id="runPipeline"><span>▶</span> Debug pipeline</button></div>
+        <div class="pipeline-toolbar"><span><span class="canvas-dot"></span> Pipeline canvas</span><div><button class="small-tool" id="addActivity">＋ Add activity</button><button class="small-tool" id="fitCanvas">⊙ Fit</button></div></div>
+        <div class="pipeline-canvas"><div class="pipeline-flow" id="pipelineFlow">
+          <div class="pipe-node source-node"><div class="node-icon source-icon">▤</div><div><small>SOURCE</small><b>Input tables</b><span>3 table inputs</span></div><span class="node-menu">···</span></div><div class="pipe-connector"><span></span></div>
+          <div class="pipe-node notebook-node"><div class="node-icon notebook-icon">▧</div><div><small>TRANSFORM</small><b>Databricks notebook</b><span>transform_data</span></div><span class="node-menu">···</span></div><div class="pipe-connector"><span></span></div>
+          <div class="pipe-node sink-node"><div class="node-icon sink-icon">⇩</div><div><small>SINK</small><b>Write output file</b><span>CSV · /workspace/output</span></div><span class="node-menu">···</span></div>
+        </div><div class="canvas-hint">Drag activities into the flow or use <b>＋ Add activity</b> to extend your pipeline.</div></div>
+        <div class="run-log" id="runLog"><div class="log-empty">Pipeline run details will appear here after you start a debug run.</div></div>
+      </section>
+      <section class="tab-panel" id="outputPanel" hidden>
+        <div class="workbench-head"><div><h2>Output files</h2><p>Files produced by your simulated pipeline run.</p></div></div><div id="outputContent" class="output-files"><div class="empty-state"><span>▧</span><b>No files yet</b><p>Run your pipeline to generate a fictional output file.</p><button class="text-link" data-goto="pipeline">Go to pipeline →</button></div></div>
+      </section>
+      <footer class="app-footer"><span>DataCraft Learning Lab</span><span>Built for practice · No cloud connection</span></footer>
+    </main>
+  </div>
+  <div class="assistant-drawer" id="assistantDrawer" aria-hidden="true"><div class="drawer-head"><div class="assistant-avatar">✦</div><div><b>Learning assistant</b><small>Here to help you learn</small></div><button id="closeAssistant" aria-label="Close assistant">×</button></div><div class="assistant-context">MISSION CONTEXT <span>Data pipeline practice</span></div><div class="chat-messages" id="chatMessages"><div class="chat-message assistant-message">Hi! I can explain the task, give a hint, or walk through your SQL. What would help? <div class="suggestions"><button data-prompt="Give me a hint">Give me a hint</button><button data-prompt="Explain joins simply">Explain joins</button><button data-prompt="What does this pipeline do?">Explain the pipeline</button></div></div></div><form id="chatForm" class="chat-form"><input id="chatInput" placeholder="Ask a learning question…" autocomplete="off" /><button aria-label="Send message">↑</button></form><div class="assistant-footnote">Demo assistant · Responses use generic examples only</div></div>
+  <div class="toast" id="toast" role="status"></div>
+  <div class="modal-backdrop" id="tableModal" hidden><div class="table-modal"><div class="modal-head"><div><span class="modal-kicker">TABLE PREVIEW</span><h2 id="modalTitle">Table preview</h2></div><button id="closeModal" aria-label="Close">×</button></div><div class="table-scroll" id="modalTable"></div><div class="modal-foot">Example rows for practice</div></div></div>
+  <div class="modal-backdrop" id="editTableModal" hidden><div class="table-modal edit-table-modal"><div class="modal-head"><div><span class="modal-kicker">TABLE EDITOR</span><h2 id="editModalTitle">Add a table</h2></div><button id="closeEditModal" aria-label="Close">×</button></div><form id="tableForm"><label>Table name<input id="tableNameInput" required maxlength="32" placeholder="e.g. source_d" /></label><label>Columns <small>Separate column names with commas</small><input id="tableColumnsInput" required placeholder="record_id, group_id, value" /></label><label>Rows <small>One comma-separated row per line. Use quotes around values containing commas.</small><textarea id="tableRowsInput" rows="5" required placeholder="R-01, G-01, 12&#10;R-02, G-02, 18"></textarea></label><div class="form-error" id="tableFormError"></div><div class="form-actions"><button type="button" class="cancel-button" id="cancelEditTable">Cancel</button><button type="submit" class="primary-button">Save table</button></div></form><div class="modal-foot">Use fictional values. Changes stay in this browser session.</div></div></div>
+  <script src="app.js"></script>
+</body>
+</html>
