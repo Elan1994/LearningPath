@@ -46,7 +46,7 @@ transformed = (source_a_df
     )
 )
 display(transformed)`};
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];let completed=false,outputReady=false,toastTimer;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];let completed=false,outputReady=false,toastTimer,nextCellNumber=2;
 function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500)}
 function renderTables(){
   const entries=Object.entries(sourceData);
@@ -85,8 +85,27 @@ $('#askAssistant').addEventListener('click',openAssistant);$('#closeAssistant').
 $('#chatForm').addEventListener('submit',e=>{e.preventDefault();const input=$('#chatInput'),v=input.value.trim();if(!v)return;addMessage(v,'user-message');input.value='';setTimeout(()=>assistantReply(v),350)});
 $$('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.prompt;addMessage(v,'user-message');setTimeout(()=>assistantReply(v),300)}));
 $('#dismissChallenge').addEventListener('click',()=>$('.mission-banner').remove());$('#addActivity').addEventListener('click',addActivity);$('#fitCanvas').addEventListener('click',()=>toast('Pipeline canvas centered'));
-$('#addCell').addEventListener('click',()=>{const cell=document.createElement('div');cell.className='cell code-cell';cell.innerHTML='<div class="cell-gutter"><span>2</span><span class="run-indicator"></span></div><div class="cell-body"><div class="cell-toolbar"><div class="language-picker"><select aria-label="New cell language"><option>SQL</option><option>Python</option><option>PySpark</option></select><span class="dropdown-arrow">⌄</span></div><span class="cell-toolbar-right">Cell 2 <button class="mini-run" title="Run cell">▶</button></span></div><textarea spellcheck="false" placeholder="Write another transformation…"></textarea><div class="cell-output"><div class="output-empty">Run this cell to see the result.</div></div></div>';$('.notebook-column').insertBefore(cell,$('#addCell'));cell.querySelector('.mini-run').onclick=()=>toast('This extra cell is ready for your practice code.');cell.querySelector('textarea').focus();toast('Added a new practice cell')});
+$('#addCell').addEventListener('click',()=>{
+  const cellNumber=nextCellNumber++;
+  const cell=document.createElement('div');
+  cell.className='cell code-cell added-cell';
+  cell.innerHTML=`<div class="cell-gutter"><span>${cellNumber}</span><span class="run-indicator"></span></div><div class="cell-body"><div class="cell-toolbar"><div class="language-picker"><select aria-label="Cell ${cellNumber} language"><option>SQL</option><option>Python</option><option>PySpark</option></select><span class="dropdown-arrow">⌄</span></div><span class="cell-toolbar-right">Cell ${cellNumber} <button class="mini-run" title="Run cell">▶</button></span></div><textarea spellcheck="false" placeholder="Write another transformation…"></textarea><div class="cell-output"><div class="output-empty">Run this cell to see the result.</div></div><div class="added-cell-actions"><button type="button" class="skip-cell">Skip cell</button><button type="button" class="discard-cell">Discard cell</button></div></div>`;
+  $('.notebook-column').insertBefore(cell,$('#addCell'));
+  cell.querySelector('.mini-run').onclick=()=>toast('This practice cell is ready to run.');
+  cell.querySelector('.skip-cell').onclick=event=>{
+    const skipped=cell.classList.toggle('skipped');
+    cell.querySelector('textarea').disabled=skipped;
+    cell.querySelector('select').disabled=skipped;
+    cell.querySelector('.mini-run').disabled=skipped;
+    event.currentTarget.textContent=skipped?'Resume cell':'Skip cell';
+    event.currentTarget.setAttribute('aria-pressed',String(skipped));
+    toast(skipped?`Cell ${cellNumber} skipped`:`Cell ${cellNumber} resumed`);
+  };
+  cell.querySelector('.discard-cell').onclick=()=>{cell.remove();toast(`Cell ${cellNumber} discarded`)};
+  cell.querySelector('textarea').focus();
+  toast(`Added cell ${cellNumber}`);
+});
 $('#resetButton').addEventListener('click',()=>{completed=false;outputReady=false;$('#codeEditor').value=languageSamples[$('#languageSelect').value];$('#cellOutput').innerHTML='<div class="output-empty">Run this cell to preview your transformed data.</div>';$('#cell1Indicator').className='run-indicator';$('#runLog').innerHTML='<div class="log-empty">Pipeline run details will appear here after you start a debug run.</div>';$('#outputContent').innerHTML='<div class="empty-state"><span>▧</span><b>No files yet</b><p>Run your pipeline to generate a fictional output file.</p><button class="text-link" data-goto="pipeline">Go to pipeline →</button></div>';$('#fileBadge').textContent='0';$$('.additional-node').forEach(n=>n.remove());updateProgress(20);$$('.tab-panel .text-link').forEach(b=>b.onclick=()=>switchTab('pipeline'));toast('Mission reset')});
 $('#closeModal').addEventListener('click',()=>$('#tableModal').hidden=true);$('#tableModal').addEventListener('click',e=>{if(e.target===$('#tableModal'))$('#tableModal').hidden=true});document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#tableModal').hidden=true;$('#assistantDrawer').classList.remove('open')}});
-$$('[data-toast]').forEach(b=>b.addEventListener('click',()=>toast(b.dataset.toast)));$('#helpButton').addEventListener('click',()=>toast('Follow the task guide in order. Use the assistant for hints.'));
+$$('[data-toast]').forEach(b=>b.addEventListener('click',()=>toast(b.dataset.toast)));
 $$('.text-link').forEach(b=>b.addEventListener('click',()=>switchTab('pipeline')));
